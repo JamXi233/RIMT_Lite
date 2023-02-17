@@ -31,6 +31,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/login_Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
@@ -114,7 +115,6 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -145,6 +145,33 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/login_LoginBtn_E1"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="登录测试账户1"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/login_LoginBtn_E2"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="登录测试账户2"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/login_LoginBtn_E3"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="登录测试账户3"
+                android:visibility="gone" />
 
         </LinearLayout>
 

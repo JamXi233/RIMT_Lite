@@ -72,23 +72,37 @@ public class SettingsFragment extends Fragment {
         SwitchCompat settings_AutoUpdate = (SwitchCompat) root.findViewById(R.id.settings_autoupdate);
         SwitchCompat settings_AutoUpdate_ToolBox = (SwitchCompat) root.findViewById(R.id.settings_autoupdate_toolbox);
         settings_CardView_1 = (CardView) root.findViewById(R.id.settings_CardView_1);
+        TextView settings_AutoUpdate_Hint = (TextView) root.findViewById(R.id.settings_autoupdate_hint);
+        TextView settings_AutoUpdate_Toolbox_Hint = (TextView) root.findViewById(R.id.settings_autoupdate_toolbox_hint);
 
         Log.e("isLogined_File", FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/isLogined"));
 
         if(FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdate").equals("1")){
             settings_AutoUpdate.setChecked(true);
-        }else settings_AutoUpdate.setChecked(false);
+            settings_AutoUpdate_Hint.setText("将会在主页提示更新");
+        }else{
+            settings_AutoUpdate.setChecked(false);
+            settings_AutoUpdate_Hint.setText("将不会在主页提示更新");
+        }
 
         if(FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdateToolBox").equals("1")){
             settings_AutoUpdate_ToolBox.setChecked(true);
-        }else settings_AutoUpdate_ToolBox.setChecked(false);
+            settings_AutoUpdate_Toolbox_Hint.setText("将会在启动时自动更新工具箱页面\n⚠将会大幅降低程序启动速度⚠");
+        }else {
+            settings_AutoUpdate_ToolBox.setChecked(false);
+            settings_AutoUpdate_Toolbox_Hint.setText("将不会在启动时自动更新工具箱页面");
+        }
 
         settings_AutoUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(settings_AutoUpdate.isChecked()){
+                    settings_AutoUpdate_Hint.setText("将会在主页提示更新");
                     FileUtil.writeFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdate", "1");
-                }else FileUtil.writeFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdate", "0");
+                }else {
+                    settings_AutoUpdate_Hint.setText("将不会在主页提示更新");
+                    FileUtil.writeFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdate", "0");
+                }
             }
         });
 
@@ -96,8 +110,12 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(settings_AutoUpdate_ToolBox.isChecked()){
+                    settings_AutoUpdate_Toolbox_Hint.setText("将会在启动时自动更新工具箱页面\n⚠将会大幅降低程序启动速度⚠");
                     FileUtil.writeFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdateToolBox", "1");
-                }FileUtil.writeFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdateToolBox", "0");
+                }else {
+                    settings_AutoUpdate_Toolbox_Hint.setText("将不会在启动时自动更新工具箱页面");
+                    FileUtil.writeFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdateToolBox", "0");
+                }
             }
         });
 

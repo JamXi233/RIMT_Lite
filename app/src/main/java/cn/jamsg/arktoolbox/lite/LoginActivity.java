@@ -1,9 +1,12 @@
 package cn.jamsg.arktoolbox.lite;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.text.Layout;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -47,7 +50,9 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity {
     private Handler handler = null;
     private String responseE = "";
+    long[] mHits = new long[3];
 
+    @SuppressLint("HardwareIds")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +61,44 @@ public class LoginActivity extends AppCompatActivity {
         Button Login_LoginBtn = (Button) findViewById(R.id.login_LoginBtn);
         EditText Login_Email = (EditText) findViewById(R.id.login_Email);
         EditText Login_Password = (EditText) findViewById(R.id.login_Password);
+        TextView Login_Title = (TextView) findViewById(R.id.login_Title);
+        Button Login_LoginBtn_E1 = (Button) findViewById(R.id.login_LoginBtn_E1);
+        Button Login_LoginBtn_E2 = (Button) findViewById(R.id.login_LoginBtn_E2);
+        Button Login_LoginBtn_E3 = (Button) findViewById(R.id.login_LoginBtn_E3);
         getWindow().setStatusBarColor(Login_Board.getDrawingCacheBackgroundColor());
         handler = new Handler();
+
+        Log.e("ID",Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+        if(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID).equals("d0cc6d48bf582663")){
+            Login_LoginBtn_E1.setVisibility(View.VISIBLE);
+            Login_LoginBtn_E2.setVisibility(View.VISIBLE);
+            Login_LoginBtn_E3.setVisibility(View.VISIBLE);
+            Login_LoginBtn_E1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Login_Email.setText("test01@qq.com");
+                    Login_Password.setText("12345678");
+                    Login_LoginBtn.callOnClick();
+                }
+            });
+            Login_LoginBtn_E2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Login_Email.setText("test02@qq.com");
+                    Login_Password.setText("12345678");
+                    Login_LoginBtn.callOnClick();
+                }
+            });
+            Login_LoginBtn_E3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Login_Email.setText("test03@qq.com");
+                    Login_Password.setText("12345678");
+                    Login_LoginBtn.callOnClick();
+                }
+            });
+        }
+
         Login_Password.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
@@ -65,6 +106,17 @@ public class LoginActivity extends AppCompatActivity {
                     Login_LoginBtn.callOnClick();
                 }
                 return false;
+            }
+        });
+
+        Login_Title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+                mHits[mHits.length - 1] = SystemClock.uptimeMillis();// 开机后运行时间
+                if (mHits[0] == (mHits[mHits.length - 1] - 500)) {
+                    JSGWareUtil.showMessage(getApplicationContext(),"已启用开发者模式");
+                }
             }
         });
 
@@ -152,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
                                     FileUtil.writeFile(FileUtil.getPackageDataDir(getApplicationContext()) + "/userdata/username", user_profile_data.data.attributes.username);
                                     FileUtil.writeFile(FileUtil.getPackageDataDir(getApplicationContext()) + "/userdata/displayname", user_profile_data.data.attributes.displayName);
                                     if (user_profile_data.data.attributes.avatarUrl == null) {
-                                        FileUtil.writeFile(FileUtil.getPackageDataDir(getApplicationContext()) + "/userdata/avatarurl", "https://bpic.51yuansu.com/pic2/cover/00/32/00/5810d76f1525b_610.jpg");
+                                        FileUtil.writeFile(FileUtil.getPackageDataDir(getApplicationContext()) + "/userdata/avatarurl", "https://img1.baidu.com/it/u=3834820558,1776972742&fm=253&fmt=auto&app=138&f=JPEG?w=400&h=400");
                                     } else
                                         FileUtil.writeFile(FileUtil.getPackageDataDir(getApplicationContext()) + "/userdata/avatarurl", user_profile_data.data.attributes.avatarUrl);
                                     FileUtil.writeFile(FileUtil.getPackageDataDir(getApplicationContext()) + "/userdata/jointime", user_profile_data.data.attributes.joinTime);
@@ -318,7 +370,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     File file = new File(FileUtil.getPackageDataDir(getApplicationContext()) + "/userdata/avatar.png");
                     FileOutputStream out = new FileOutputStream(file);
-                    resource.compress(Bitmap.CompressFormat.PNG, 100, out);
+                    resource.compress(Bitmap.CompressFormat.PNG, 50, out);
                     out.flush();
                     out.close();
                 } catch (Exception e) {
@@ -333,7 +385,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 try {
-                    Thread.sleep(1000);//休眠10毫秒
+                    Thread.sleep(500);//休眠10毫秒
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -343,6 +395,8 @@ public class LoginActivity extends AppCompatActivity {
 
     //检查登录信息
     private String CheckLoginInfo() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = RequestBody.create(mediaType, "");
@@ -378,6 +432,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private String User_Profile(String Uid) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = RequestBody.create(mediaType, "");

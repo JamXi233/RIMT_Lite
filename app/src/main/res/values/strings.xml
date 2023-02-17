@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">罗德岛小终端</string>
+    <string name="app_name">罗德岛移动终端Lite</string>
     <string name="title_home">终端首页</string>
     <string name="title_dashboard">工具箱</string>
     <string name="title_notifications">个人资料</string>
