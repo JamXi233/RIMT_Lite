@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-            }.run();
+            }.start();
         }
         binding.topAppLayout.addLiftOnScrollListener(new AppBarLayout.LiftOnScrollListener() {
             @Override
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = RequestBody.create(mediaType, "");
-        Request request = new Request.Builder().url("https://api.craftsic.cn/ToolBox/ToolBox_Name")
+        Request request = new Request.Builder().url("https://api.craftsic.cn/toolbox/ToolBox_Name")
                 .method("GET", null)
                 .build();
         try {
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = RequestBody.create(mediaType, "");
-        Request request = new Request.Builder().url("https://api.craftsic.cn/ToolBox/ToolBox_URL")
+        Request request = new Request.Builder().url("https://api.craftsic.cn/toolbox/ToolBox_URL")
                 .method("GET", null)
                 .build();
         try {

@@ -400,7 +400,7 @@ public class LoginActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = RequestBody.create(mediaType, "");
-        Request request = new Request.Builder().url("https://api.craftsic.cn/Login/CheckLoginInfo").method("GET", null).build();
+        Request request = new Request.Builder().url("https://api.craftsic.cn/login/CheckLoginInfo").method("GET", null).build();
         try {
             Response response = client.newCall(request).execute();
             return response.body().string();

@@ -1,13 +1,18 @@
 package cn.jamsg.arktoolbox.lite.ui.settings;
 
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,15 +45,27 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import cn.jamsg.arktoolbox.lite.FileUtil;
+import cn.jamsg.arktoolbox.lite.JSGWareUtil;
 import cn.jamsg.arktoolbox.lite.LoginActivity;
 import cn.jamsg.arktoolbox.lite.R;
 import cn.jamsg.arktoolbox.lite.databinding.FragmentSettingsBinding;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SettingsFragment extends Fragment {
 
     private FragmentSettingsBinding binding;
+    private String responseE = "";
+    private String releaseNote = "";
+    private String releaseLink = "";
+    private String releaseVersion = "";
+
     private CardView settings_CardView_1;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,11 +74,9 @@ public class SettingsFragment extends Fragment {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        //登录卡片
+        settings_CardView_1 = (CardView) root.findViewById(R.id.settings_CardView_1);
         LinearLayout settings_UserProfile = (LinearLayout) root.findViewById(R.id.settings_userprofile);
-        TextView settings_UserProfile_Username = (TextView) root.findViewById(R.id.settings_userprofile_username);
-        TextView settings_UserProfile_Email = (TextView) root.findViewById(R.id.settings_userprofile_email);
-        TextView settings_UserProfile_JoinTime = (TextView) root.findViewById(R.id.settings_userprofile_jointime);
-        TextView settings_UserProfile_Type = (TextView) root.findViewById(R.id.settings_userprofile_type);
         ProgressBar settings_ProgressBar = (ProgressBar) root.findViewById(R.id.settings_progress);
         ImageView settings_Logined = (ImageView) root.findViewById(R.id.settings_logined);
         ImageView settings_NotLogin = (ImageView) root.findViewById(R.id.settings_notlogin);
@@ -69,29 +84,26 @@ public class SettingsFragment extends Fragment {
         TextView settings_Uid = (TextView) root.findViewById(R.id.settings_uid);
         Button settings_LoginButton = (Button) root.findViewById(R.id.settings_loginbutton);
         Button settings_SignOutButton = (Button) root.findViewById(R.id.settings_signoutbutton);
+        //用户信息
+        TextView settings_UserProfile_Username = (TextView) root.findViewById(R.id.settings_userprofile_username);
+        TextView settings_UserProfile_Email = (TextView) root.findViewById(R.id.settings_userprofile_email);
+        TextView settings_UserProfile_JoinTime = (TextView) root.findViewById(R.id.settings_userprofile_jointime);
+        TextView settings_UserProfile_Type = (TextView) root.findViewById(R.id.settings_userprofile_type);
+        //自动检查更新
         SwitchCompat settings_AutoUpdate = (SwitchCompat) root.findViewById(R.id.settings_autoupdate);
-        SwitchCompat settings_AutoUpdate_ToolBox = (SwitchCompat) root.findViewById(R.id.settings_autoupdate_toolbox);
-        settings_CardView_1 = (CardView) root.findViewById(R.id.settings_CardView_1);
         TextView settings_AutoUpdate_Hint = (TextView) root.findViewById(R.id.settings_autoupdate_hint);
+        SwitchCompat settings_AutoUpdate_ToolBox = (SwitchCompat) root.findViewById(R.id.settings_autoupdate_toolbox);
         TextView settings_AutoUpdate_Toolbox_Hint = (TextView) root.findViewById(R.id.settings_autoupdate_toolbox_hint);
+        //手动检查更新
+        Button settings_CheckUpdate_Button = (Button) root.findViewById(R.id.settings_checkupdate_button);
+        Button settings_CheckUpdate_ToolBox_Button = (Button) root.findViewById(R.id.settings_checkupdate_toolbox_button);
+        TextView settings_CheckUpdate_Title = (TextView) root.findViewById(R.id.settings_checkupdate_title);
+        TextView settings_CheckUpdate_Hint = (TextView) root.findViewById(R.id.settings_checkupdate_hint);
+        TextView settings_CheckUpdate_ToolBox_Title = (TextView) root.findViewById(R.id.settings_checkupdate_toolbox_title);
+        TextView settings_CheckUpdate_Toolbox_Hint = (TextView) root.findViewById(R.id.settings_checkupdate_toolbox_hint);
+
 
         Log.e("isLogined_File", FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/isLogined"));
-
-        if(FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdate").equals("1")){
-            settings_AutoUpdate.setChecked(true);
-            settings_AutoUpdate_Hint.setText("将会在主页提示更新");
-        }else{
-            settings_AutoUpdate.setChecked(false);
-            settings_AutoUpdate_Hint.setText("将不会在主页提示更新");
-        }
-
-        if(FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdateToolBox").equals("1")){
-            settings_AutoUpdate_ToolBox.setChecked(true);
-            settings_AutoUpdate_Toolbox_Hint.setText("将会在启动时自动更新工具箱页面\n⚠将会大幅降低程序启动速度⚠");
-        }else {
-            settings_AutoUpdate_ToolBox.setChecked(false);
-            settings_AutoUpdate_Toolbox_Hint.setText("将不会在启动时自动更新工具箱页面");
-        }
 
         settings_AutoUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +128,112 @@ public class SettingsFragment extends Fragment {
                     settings_AutoUpdate_Toolbox_Hint.setText("将不会在启动时自动更新工具箱页面");
                     FileUtil.writeFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdateToolBox", "0");
                 }
+            }
+        });
+
+        if(FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdate").equals("1")){
+            settings_AutoUpdate.setChecked(true);
+            settings_AutoUpdate_Hint.setText("将会在主页提示更新");
+        }else{
+            settings_AutoUpdate.setChecked(false);
+            settings_AutoUpdate_Hint.setText("将不会在主页提示更新");
+        }
+
+        if(FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdateToolBox").equals("1")){
+            settings_AutoUpdate_ToolBox.setChecked(true);
+            settings_AutoUpdate_Toolbox_Hint.setText("将会在启动时自动更新工具箱页面");
+        }else {
+            settings_AutoUpdate_ToolBox.setChecked(false);
+            settings_AutoUpdate_Toolbox_Hint.setText("将不会在启动时自动更新工具箱页面");
+        }
+
+        settings_CheckUpdate_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        try {
+                            Thread.sleep(10);//休眠10毫秒
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        CheckUpdate();
+                        if (releaseVersion.equals("Err_0")) {
+                            //JSGWareUtil.showMessage(getContext(),"更新工具箱失败");
+                        } else if(!releaseVersion.equals(getVersionName("cn.jamsg.arktoolbox.lite"))) {
+                            CheckUpdate_Link();
+                            if (releaseLink.equals("Err_0")) {
+                                //JSGWareUtil.showMessage(getContext(),"更新工具箱失败");
+                            } else {
+                                CheckUpdate_Note();
+                                if (releaseNote.equals("Err_0")) {
+                                    //JSGWareUtil.showMessage(getContext(),"更新工具箱失败");
+                                } else {
+                                    settings_CheckUpdate_Title.setText("检查到更新！");
+                                    settings_CheckUpdate_Hint.setText("当前版本:"+getVersionName("cn.jamsg.arktoolbox.lite")+" | "+"最新版本"+releaseVersion);
+                                    settings_CheckUpdate_Button.setText("详情");
+                                    settings_CheckUpdate_Button.setBackgroundColor(Color.parseColor("#F50057"));
+                                    settings_CheckUpdate_Button.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            AlertDialog.Builder Update_Dialog = new AlertDialog.Builder(getContext());
+                                            Update_Dialog.setTitle("有可用更新");
+                                            Update_Dialog.setMessage("当前版本为:" + getVersionName("cn.jamsg.arktoolbox.lite") +"\n" +"\uD83C\uDD95最新版本为:" + releaseVersion +"\n\n更新日志:" + "\n" + releaseNote);
+                                            Update_Dialog.setPositiveButton("更新", (dialog, which) -> {
+                                                Uri releaseLinkUri = Uri.parse(releaseLink);
+                                                Intent intent = new Intent(Intent.ACTION_VIEW, releaseLinkUri);
+                                                startActivity(intent);
+                                            });
+                                            Update_Dialog.setNegativeButton("取消", (dialog, which) -> JSGWareUtil.showMessage(getContext(), "未执行更新"));
+                                            Update_Dialog.setCancelable(false);
+                                            if (!getActivity().isFinishing()) {
+                                                Update_Dialog.show();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }else {
+                            settings_CheckUpdate_Title.setText("已是最新版本");
+                            settings_CheckUpdate_Hint.setText("当前版本:"+getVersionName("cn.jamsg.arktoolbox.lite")+" | "+"最新版本"+releaseVersion);
+                            settings_CheckUpdate_Button.setEnabled(false);
+                        }
+                    }
+                }.run();
+            }
+        });
+
+        settings_CheckUpdate_ToolBox_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        try {
+                            Thread.sleep(0);//休眠0毫秒
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        ToolBox_Name();
+                        if (responseE.equals("Err_0")) {
+                            //JSGWareUtil.showMessage(getContext(),"更新工具箱失败");
+                        } else {
+                            FileUtil.writeFile(FileUtil.getPackageDataDir(getContext()) + "/toolbox/toolbox_name",responseE);
+                            ToolBox_URL();
+                            if (responseE.equals("Err_0")) {
+                                //JSGWareUtil.showMessage(getContext(),"更新工具箱失败");
+                            } else {
+                                FileUtil.writeFile(FileUtil.getPackageDataDir(getContext()) + "/toolbox/toolbox_url",responseE);
+                            }
+                        }
+                    }
+                }.run();
+                if (responseE.equals("Err_0")){
+                    settings_CheckUpdate_ToolBox_Title.setText("❌更新工具箱失败");
+                }else settings_CheckUpdate_ToolBox_Title.setText("✅工具箱更新完成");settings_CheckUpdate_ToolBox_Button.setEnabled(false);settings_CheckUpdate_ToolBox_Button.setText("完成");
             }
         });
 
@@ -203,9 +321,135 @@ public class SettingsFragment extends Fragment {
                 if (swatch != null) {
                     settings_CardView_1.setCardBackgroundColor(swatch.getRgb());
                 } else {
+                    swatch = palette.getDominantSwatch();
+                    if (swatch != null) {
+                        settings_CardView_1.setCardBackgroundColor(swatch.getRgb());
+                    } else {
+                        swatch = palette.getMutedSwatch();
+                        if (swatch != null) {
+                            settings_CardView_1.setCardBackgroundColor(swatch.getRgb());
+                        } else {
+                            settings_CardView_1.setCardBackgroundColor(Color.parseColor("#A0A0A0"));
+                        }
+                    }
                 }
             }
         });
+    }
+
+    private String CheckUpdate() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder().url("https://api.craftsic.cn/toolbox/release/releaseVersion")
+                .method("GET", null)
+                .addHeader("Authorization", "Token " + FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/token"))
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            //检查是否登陆成功
+            releaseVersion = response.body().string();
+            return releaseVersion;
+        } catch (IOException e) {
+            releaseVersion = "Err_0";
+            return "Err_0";
+        }
+    }
+
+    private String CheckUpdate_Note() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder().url("https://api.craftsic.cn/toolbox/release/releaseNote")
+                .method("GET", null)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            //检查是否登陆成功
+            releaseNote = response.body().string();
+            return releaseNote;
+        } catch (IOException e) {
+            releaseNote = "Err_0";
+            return "Err_0";
+        }
+    }
+
+    private String CheckUpdate_Link() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder().url("https://api.craftsic.cn/toolbox/release/releaseLink")
+                .method("GET", null)
+                .addHeader("Authorization", "Token " + FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/token"))
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            //检查是否登陆成功
+            releaseLink = response.body().string();
+            return releaseLink;
+        } catch (IOException e) {
+            releaseLink = "Err_0";
+            return "Err_0";
+        }
+    }
+
+    private String ToolBox_Name() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder().url("https://api.craftsic.cn/toolbox/ToolBox_Name")
+                .method("GET", null)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            //检查是否登陆成功
+            responseE = response.body().string();
+            return responseE;
+        } catch (IOException e) {
+            responseE = "Err_0";
+            return "Err_0";
+        }
+    }
+
+    private String ToolBox_URL() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder().url("https://api.craftsic.cn/toolbox/ToolBox_URL")
+                .method("GET", null)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            //检查是否登陆成功
+            responseE = response.body().string();
+            return responseE;
+        } catch (IOException e) {
+            responseE = "Err_0";
+            return "Err_0";
+        }
+    }
+
+    public String getVersionName(String PackageName) {
+        PackageManager manager = getContext().getPackageManager();
+        try {
+            //第二个参数代表额外的信息，例如获取当前应用中的所有的Activity
+            PackageInfo packageInfo = manager.getPackageInfo(PackageName, PackageManager.GET_META_DATA);
+            Log.i("VersionName", packageInfo.versionName);
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "NotInstall";
     }
 
     @Override

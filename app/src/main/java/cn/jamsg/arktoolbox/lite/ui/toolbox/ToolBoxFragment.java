@@ -1,5 +1,6 @@
 package cn.jamsg.arktoolbox.lite.ui.toolbox;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -53,6 +54,7 @@ public class ToolBoxFragment extends Fragment {
     String[] ToolBox_Data_Name;
     String[] ToolBox_Data_URL;
 
+    @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ToolBoxViewModel dashboardViewModel =
@@ -77,10 +79,13 @@ public class ToolBoxFragment extends Fragment {
         ToolBox_SubTitle.setVisibility(View.VISIBLE);
         ToolBox_Updated.setVisibility(View.VISIBLE);
         ToolBox_Progress.setVisibility(View.GONE);
-        ToolBox_Title.setText("明日方舟工具箱");
+        ToolBox_Title.setText("方舟工具箱");
         if(FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/userdata/AutoUpdateToolBox").equals("1")){
             ToolBox_SubTitle.setText(ToolBox_Data_Name.length + "个工具\n自动更新已开启");
         }else ToolBox_SubTitle.setText(ToolBox_Data_Name.length + "个工具\n自动更新已关闭");
+        if (ToolBox_Data_Name.length == 0){
+            ToolBox_SubTitle.setText(ToolBox_Data_Name.length + "个工具\n列表异常，建议在[个人资料]页内手动更新工具箱");
+        }
 
         ToolBox_List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -90,7 +95,6 @@ public class ToolBoxFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
 
         return root;
     }

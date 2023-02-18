@@ -9,8 +9,8 @@ android {
         applicationId "cn.jamsg.arktoolbox.lite"
         minSdk 29
         targetSdk 33
-        versionCode 391
-        versionName "1.0"
+        versionCode 392
+        versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

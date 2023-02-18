@@ -386,18 +386,118 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/settings_checkupdates"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="手动更新"
+                            android:textSize="14sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_weight="5">
+
+                                    <TextView
+                                        android:id="@+id/settings_checkupdate_title"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="检查更新"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/settings_checkupdate_hint"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="手动检查更新"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
+
+                                <Button
+                                    android:id="@+id/settings_checkupdate_button"
+                                    android:layout_width="84dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="right|center"
+                                    android:text="检查"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_weight="5">
+
+                                    <TextView
+                                        android:id="@+id/settings_checkupdate_toolbox_title"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="更新工具箱"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/settings_checkupdate_toolbox_hint"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="手动更新工具箱"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
+
+                                <Button
+                                    android:id="@+id/settings_checkupdate_toolbox_button"
+                                    android:layout_width="84dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="right|center"
+                                    android:text="更新"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Copyright © 2017-2023\nJSG-LLC JamXi"
+                        android:textSize="12sp"
+                        android:layout_marginTop="24dp"/>
+
                 </LinearLayout>
 
             </ScrollView>
 
         </androidx.core.widget.NestedScrollView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Copyright © 2017-2023\nJSG-LLC JamXi"
-            android:textSize="12sp" />
 
     </LinearLayout>
 
