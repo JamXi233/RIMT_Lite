@@ -17,7 +17,6 @@
         android:gravity="center"
         android:orientation="vertical">
 
-
         <androidx.cardview.widget.CardView
             android:id="@+id/Home_CardView_1"
             android:layout_width="match_parent"
@@ -253,7 +252,7 @@
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/Home_Image_Official"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="165dp"
                         android:src="@mipmap/home_officialwebsite"
                         app:riv_corner_radius="12dp" />
 
@@ -268,7 +267,7 @@
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/Home_Image_Weibo"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="165dp"
                         android:src="@mipmap/home_officialweibo"
                         app:riv_corner_radius="12dp" />
 
@@ -283,7 +282,7 @@
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/Home_Image_Bilibili"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="165dp"
                         android:src="@mipmap/home_officialbilibili"
                         app:riv_corner_radius="12dp" />
 
@@ -298,7 +297,7 @@
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/Home_Image_Terra"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="165dp"
                         android:src="@mipmap/home_official_terra_historicus"
                         app:riv_corner_radius="12dp" />
 
@@ -313,7 +312,7 @@
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/Home_Image_Siren"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="165dp"
                         android:src="@mipmap/home_official_siren"
                         app:riv_corner_radius="12dp" />
 

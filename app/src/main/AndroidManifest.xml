@@ -22,6 +22,9 @@
         android:theme="@style/Theme.ArkToolBoxLite"
         tools:targetApi="31">
         <activity
+            android:name=".WebActivity"
+            android:exported="false" />
+        <activity
             android:name=".ToolBoxListView"
             android:exported="false" />
         <activity
@@ -37,7 +40,7 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:label="登录到CRAFT"></activity>
+            android:label="登录到CRAFT" />
     </application>
 
 </manifest>

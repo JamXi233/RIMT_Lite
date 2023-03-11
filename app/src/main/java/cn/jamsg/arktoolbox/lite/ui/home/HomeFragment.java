@@ -47,6 +47,7 @@ import cn.jamsg.arktoolbox.lite.FileUtil;
 import cn.jamsg.arktoolbox.lite.JSGWareUtil;
 import cn.jamsg.arktoolbox.lite.MainActivity;
 import cn.jamsg.arktoolbox.lite.R;
+import cn.jamsg.arktoolbox.lite.WebActivity;
 import cn.jamsg.arktoolbox.lite.databinding.FragmentHomeBinding;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -88,6 +89,8 @@ public class HomeFragment extends Fragment {
         ImageView home_Image_Bilibili = (ImageView) root.findViewById(R.id.Home_Image_Bilibili);
         ImageView home_Image_Terra = (ImageView) root.findViewById(R.id.Home_Image_Terra);
         ImageView home_Image_Siren = (ImageView) root.findViewById(R.id.Home_Image_Siren);
+
+        WebActivity webActivity = new WebActivity();
 
         setText();//设置随机文本
 
@@ -142,8 +145,8 @@ public class HomeFragment extends Fragment {
         home_Image_Bilibili.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse("https://space.bilibili.com/161775300");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                Intent intent = new Intent(getContext(), WebActivity.class);
+                intent.putExtra("WebView_URL","https://space.bilibili.com/161775300");
                 startActivity(intent);
             }
         });
@@ -151,8 +154,8 @@ public class HomeFragment extends Fragment {
         home_Image_Official.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse("https://ak.hypergryph.com/");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                Intent intent = new Intent(getContext(), WebActivity.class);
+                intent.putExtra("WebView_URL","https://ak.hypergryph.com/");
                 startActivity(intent);
             }
         });
@@ -160,8 +163,8 @@ public class HomeFragment extends Fragment {
         home_Image_Weibo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse("https://weibo.com/u/6279793937");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                Intent intent = new Intent(getContext(), WebActivity.class);
+                intent.putExtra("WebView_URL","https://weibo.com/u/6279793937");
                 startActivity(intent);
             }
         });
@@ -169,8 +172,8 @@ public class HomeFragment extends Fragment {
         home_Image_Terra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse("https://terra-historicus.hypergryph.com/");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                Intent intent = new Intent(getContext(), WebActivity.class);
+                intent.putExtra("WebView_URL","https://terra-historicus.hypergryph.com/");
                 startActivity(intent);
             }
         });
@@ -178,8 +181,8 @@ public class HomeFragment extends Fragment {
         home_Image_Siren.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse("https://monster-siren.hypergryph.com/");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                Intent intent = new Intent(getContext(), WebActivity.class);
+                intent.putExtra("WebView_URL","https://monster-siren.hypergryph.com/");
                 startActivity(intent);
             }
         });
