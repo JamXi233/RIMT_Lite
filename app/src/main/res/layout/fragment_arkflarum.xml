@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.toolbox.ToolBoxFragment"
+    android:paddingTop="?actionBarSize"
+    android:paddingBottom="?actionBarSize">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/toolbox_CardView_1"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginHorizontal="8dp"
+            app:cardBackgroundColor="#5864f2"
+            app:cardCornerRadius="24dp"
+            app:cornerRadius="24dp">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:src="@drawable/arkflarum" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="left|center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="24dp">
+
+                <ImageView
+                    android:id="@+id/toolbox_updated"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/home_installed"
+                    />
+
+                <ImageView
+                    android:id="@+id/toolbox_unupdate"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/home_notinstall"
+                    android:visibility="gone" />
+
+                <ProgressBar
+                    android:id="@+id/toolbox_progress"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:visibility="gone" />
+
+                <View
+                    android:layout_width="18dp"
+                    android:layout_height="0dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/toolbox_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="正在获取API信息..."
+                        android:textColor="#F3F3F3"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/toolbox_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0个通知"
+                        android:textColor="#DCDCDC"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="100dp"
+            android:layout_height="3dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="2dp"
+            android:backgroundTint="#9E9E9E"
+            app:cardCornerRadius="24dp"
+            app:cornerRadius="24dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/toolbox_List_NoTool"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:text="暂无工具"
+                android:visibility="gone" />
+
+            <ListView
+                android:id="@+id/discussion_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

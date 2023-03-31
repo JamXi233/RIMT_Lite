@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_toolbox" />
 
     <fragment
+        android:id="@+id/navigation_arkflarum"
+        android:name="cn.jamsg.arktoolbox.lite.ui.arkflarum.ArkFlarumFragment"
+        android:label="@string/title_arkflarum"
+        tools:layout="@layout/fragment_arkflarum" />
+
+    <fragment
         android:id="@+id/navigation_notifications"
         android:name="cn.jamsg.arktoolbox.lite.ui.settings.SettingsFragment"
         android:label="@string/title_notifications"

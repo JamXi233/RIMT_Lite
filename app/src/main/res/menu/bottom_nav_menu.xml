@@ -12,6 +12,11 @@
         android:title="@string/title_dashboard" />
 
     <item
+        android:id="@+id/navigation_arkflarum"
+        android:icon="@drawable/nav_arkflarum"
+        android:title="@string/title_arkflarum" />
+
+    <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/nav_avatar"
         android:title="@string/title_notifications" />

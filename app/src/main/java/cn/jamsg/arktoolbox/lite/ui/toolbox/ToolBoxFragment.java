@@ -63,7 +63,6 @@ public class ToolBoxFragment extends Fragment {
         binding = FragmentToolboxBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         ToolBox_List = root.findViewById(R.id.toolbox_List_Tools);
-        handler = new Handler();
 
         responseE = FileUtil.readFile(FileUtil.getPackageDataDir(getContext()) + "/toolbox/toolbox_name");
         ToolBox_Data_Name = responseE.split(",");
